@@ -1,0 +1,112 @@
+{% extends 'base.html'%}
+
+{% block content%}
+<section id="showcase-inner" class="showcase-search text-white py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-12">
+                {% include 'partials/_alerts.html' %}
+                <form action="{% url 'add_listing'%}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token%}
+
+                    <!-- Form Row 1 -->
+                    <div class="form-row">
+                        {% if user.is_authenticated %}
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                        {% else %}
+                            <input type="hidden" name="user_id" value="0">
+                        {% endif %}
+<!--                        <input type="hidden" name="listing_id" value="{{listing.id}}">-->
+                        <div class="col-md-6">
+                            <p>Описание</p>
+                            <textarea name="description" id="" cols="50" rows="5" placeholder="Описание"></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p>Заголовог</p>
+                            <input type="text" name="title" class="form-control" placeholder="Заголовог">
+                            <p class="mt-2">Имя</p>
+                            <input type="text" name="name" class="form-control" placeholder="Имя"
+                                   {% if user.is_authenticated %} value="{{user.first_name}}" {% endif %}>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <p>Адресс</p>
+                            <input type="text" name="address" class="form-control" placeholder="Адресс">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <p>Цена</p>
+                            <input type="text" name="price" class="form-control" placeholder="Цена">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <p>Номер телефона</p>
+                            <input type="text" name="phone" class="form-control" placeholder="Номер телефона">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <p>Номер ватсап</p>
+                            <input type="text" name="whatsapp_phone" class="form-control" placeholder="Номер ватсап">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p>Валюта</p>
+                            <select name="currency" class="form-control">
+                                <option selected="true" disabled="disabled">Валюта</option>
+                                {% for key, value in currency_choices.items %}
+                                <option value="{{ key }}">{{value}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <p>Категории</p>
+                            <select name="category" class="form-control">
+                                <option selected="true" disabled="disabled">Категория</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}">{{category.title}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="input_main" class="btn align-middle">Выберите главное фото</label>
+                            <img class="img-thumbnail img-fluid" id="photo_main" alt="your image"/>
+                            <input id="input_main" name="photos" style="visibility: hidden" type="file"
+                                   accept="image/*"
+                                   onchange="ImageSelect(event,'photo_main')">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="input_1" class="btn">Выберите фото 1</label>
+                            <img class="img-thumbnail img-fluid " id="photo_1" alt="your image"/>
+                            <input id="input_1" name="photos" style="visibility: hidden" type="file"
+                                   onchange="ImageSelect(event,'photo_1')">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="input_2" class="btn">Выберите фото 2</label>
+                            <img class="img-thumbnail img-fluid" id="photo_2" alt="your image"/>
+                            <input id="input_2" name="photos" style="visibility: hidden" type="file"
+                                   onchange="ImageSelect(event,'photo_2')">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="input_3" class="btn ">Выберите фото 3</label>
+                            <img class="img-thumbnail img-fluid" id="photo_3" alt="your image"/>
+                            <input id="input_3" name="photos" style="visibility: hidden" type="file"
+                                   onchange="ImageSelect(event,'photo_3')">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-secondary btn-block mt-4" type="submit">Отправить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function ImageSelect(obj, id) {
+            let file = obj.target.files[0];
+            let link = window.URL.createObjectURL(file);
+            document.getElementById(id).src = link;
+        }
+    </script>
+</section>
+{% endblock%}
